@@ -73,14 +73,14 @@ export class GenLiteLocationsPlugin extends GenLitePlugin {
                     step: 0.05,
                 }
             }
-        },
-    }
+        }
+    };
 
     private setupLocations(): void {
-        this.lastPosition = [0, 0]
-        this.currentLocation = [[0, 0]]
-        this.currentLocationLabel = ""
-        this.currentSubLocation = ""
+        this.lastPosition = [0, 0];
+        this.currentLocation = [[0, 0]];
+        this.currentLocationLabel = "";
+        this.currentSubLocation = "";
         this.mainLocations = {
             "Town of Skal": {
                 polygon: [[]],
@@ -135,8 +135,7 @@ export class GenLiteLocationsPlugin extends GenLitePlugin {
             "Milltown": {
                 polygon: [[178, 14], [190, 14], [194, 18], [192, 38], [186, 46], [177, 46], [176, 47], [171, 47], [170, 46], [167, 46], [161, 40], [161, 35], [162, 34], [162, 29], [161, 28], [161, 21], [171, 21], [178, 14]]
             }
-
-        }
+        };
         this.dungeonLocations = {
             "Reka Dungeon": {
                 polygon: [[18, -70], [-66, -70], [-66, -23], [18, -23], [18, -70]],
@@ -147,34 +146,34 @@ export class GenLiteLocationsPlugin extends GenLitePlugin {
             "Tutorial Dungeon": {
                 polygon: [[77, 73], [130, 73], [130, 124], [82, 125], [77, 73]],
             }
-        }
+        };
         this.regionLocations = {
             "Reka Valley": [[-128, -128], [227, -128], [240, -55], [240, -51], [235, -46], [235, -38], [240, -33], [228, -21], [227, 17], [235, 34], [237, 50], [244, 57], [246, 86], [248, 109], [251, 113], [251, 130], [253, 132], [253, 144], [258, 149], [258, 151], [268, 161], [272, 161], [280, 169], [280, 178], [290, 201], [291, 224], [338, 255], [-75, 255], [-90, 244], [-98, 244], [-106, 236], [-114, 237], [-121, 227], [-121, 208], [-108, 195], [-108, 185], [-97, 174], [-97, 154], [-102, 149], [-76, 145], [-60, 127], [-48, 123], [-38, 116], [-22, 118], [-17, 109], [-6, 40], [-7, 0], [-60, -10], [-73, -34], [-76, -55], [-127, -59], [-128, -128]],
             "Kosten Ridge": [[247, -76], [295, -110], [490, -112], [509, 215], [472, 254], [342, 254], [290, 221], [247, -76]],
             "Paridot Plains": [[127, 256], [-75, 256], [-68, 263], [-77, 282], [-102, 287], [-121, 314], [-95, 383], [0, 383], [0, 511], [127, 511], [127, 256]],
             "Timberlode Threshold": [[-256, 127], [-161, 128], [-128, 149], [-103, 149], [-98, 154], [-98, 174], [-109, 185], [-109, 195], [-122, 208], [-122, 228], [-103, 383], [-256, 383], [-256, 127]]
-        }
+        };
     }
     private setupUILocationLabel(): void {
-        this.locationLabel = document.createElement("div")
+        this.locationLabel = document.createElement("div");
         this.locationLabel.style.display = "none";
         this.locationLabel.style.visibility = "hidden";
         this.locationLabel.style.color = "goldenrod";
         this.locationLabel.style.fontFamily = "'Acme', 'Times New Roman', Times, serif";
         this.locationLabel.style.textShadow = "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000";
-        this.locationLabel.classList.add("location-label")
-        this.locationLabel.innerText = ""
-        document.body.appendChild(this.locationLabel)
+        this.locationLabel.classList.add("location-label");
+        this.locationLabel.innerText = "";
+        document.body.appendChild(this.locationLabel);
     }
     private setupUIMapIframe(): void {
-        this.mapZoom = 0.55
-        this.mapIframe = document.createElement("iframe")
+        this.mapZoom = 0.55;
+        this.mapIframe = document.createElement("iframe");
         this.mapIframe.style.display = "none";
         this.mapIframe.style.visibility = "hidden";
-        this.mapIframe.classList.add("map-iframe", "map-iframe-hidden")
-
-        this.mapIframe.src = `https://genfamap.com/?location=true#0_0_${this.mapZoom}`
-        document.body.appendChild(this.mapIframe)
+        this.mapIframe.classList.add("map-iframe", "map-iframe-hidden");
+        
+        this.mapIframe.src = `https://genfamap.com/?location=true#0_0_${this.mapZoom}`;
+        document.body.appendChild(this.mapIframe);
     }
     async init() {
         document.genlite.registerPlugin(this);
@@ -183,8 +182,7 @@ export class GenLiteLocationsPlugin extends GenLitePlugin {
         this.setupUILocationLabel();
         this.setupUIMapIframe();
 
-        this.addStylesheet()
-        //
+        this.addStylesheet();
     }
     async postInit() {
         document.genlite.ui.registerPlugin("Locations", null, this.handlePluginState.bind(this), this.pluginSettings);
@@ -209,99 +207,101 @@ export class GenLiteLocationsPlugin extends GenLitePlugin {
     }
     private checkLocationLabels(): void {
         if (this.locationLabels) {
-            this.enableLocationLabels()
+            this.enableLocationLabels();
         } else if (!this.locationLabels) {
-            this.disableLocationLabels()
+            this.disableLocationLabels();
         }
     }
     private handleShowCoordinatesDisable(state: boolean): void {
-        this.showCoordinates = state
-        this.checkShowCoordinates()
-
+        this.showCoordinates = state;
+        this.checkShowCoordinates();
     }
     private checkShowCoordinates(): void {
         if (this.showCoordinates) {
-            this.locationCheck()
+            this.locationCheck();
         } else if (!this.showCoordinates) {
-            this.locationCheck()
+            this.locationCheck();
         }
     }
     private handleCompassMapEnableDisable(state: boolean): void {
-        this.compassMap = state
+        this.compassMap = state;
         if (this.compassMap) {
-            this.enableMapIframe()
+            this.enableMapIframe();
         } else if (!this.compassMap) {
-            this.disableMapIframe()
+            this.disableMapIframe();
         }
-        this.locationCheck()
+        this.locationCheck();
     }
     private updateMapIframeSrc(override=false): void {
-        if (!this.mapFocus && !this.mapTranslucent && !override) return
+        if (!this.mapFocus && !this.mapTranslucent && !override) return;
         let layer = document.game.PLAYER.location.layer.includes("world") ?
-            document.game.PLAYER.location.layer.replace("world", '') : document.game.PLAYER.location.layer
-        //Zoom Logic Goes here?
+            document.game.PLAYER.location.layer.replace("world", '') : document.game.PLAYER.location.layer;
 
-        this.mapIframe.src = `https://genfamap.com/${layer}?location=true#${document.game.PLAYER.character.pos2.x + .5}_${document.game.PLAYER.character.pos2.y - .5}_${this.mapZoom}`
+        this.mapIframe.src = `https://genfamap.com/${layer}?location=true#${document.game.PLAYER.character.pos2.x + .5}_${document.game.PLAYER.character.pos2.y - .5}_${this.mapZoom}`;
     }
     private toggleTranslucentMap(): void {
-        this.mapTranslucent = !this.mapTranslucent
-
+        this.mapTranslucent = !this.mapTranslucent;
+        
         if (this.mapTranslucent) {
-            this.mapIframe.classList.add("map-iframe-translucent")
-            this.mapIframe.classList.remove("map-iframe-hidden")
-            this.mapIframe.classList.remove("map-iframe-focus")
+            this.mapIframe.classList.add("map-iframe-translucent");
+            this.mapIframe.classList.remove("map-iframe-hidden");
+            this.mapIframe.classList.remove("map-iframe-focus");
         } else if (!this.mapTranslucent) {
-            this.mapIframe.classList.add("map-iframe-hidden")
-            this.mapIframe.classList.remove("map-iframe-translucent")
-            this.mapIframe.classList.remove("map-iframe-focus")
-            this.mapFocus = false
+            this.mapIframe.classList.add("map-iframe-hidden");
+            this.mapIframe.classList.remove("map-iframe-translucent");
+            this.mapIframe.classList.remove("map-iframe-focus");
+            this.mapFocus = false;
         }
-        this.updateMapIframeSrc()
+        this.updateMapIframeSrc();
     }
     private hideMap(): void {
-        this.mapFocus = false
-        this.mapTranslucent = false
-
-        this.mapIframe.classList.add("map-iframe-hidden")
-        this.mapIframe.classList.remove("map-iframe-focus")
-        this.mapIframe.classList.remove("map-iframe-translucent")
+        this.mapFocus = false;
+        this.mapTranslucent = false;
+        
+        this.mapIframe.classList.add("map-iframe-hidden");
+        this.mapIframe.classList.remove("map-iframe-focus");
+        this.mapIframe.classList.remove("map-iframe-translucent");
     }
     private focusMap(): void {
-        this.mapFocus = true
-        this.mapTranslucent = false
+        this.mapFocus = true;
+        this.mapTranslucent = false;
 
-        this.updateMapIframeSrc(true)
 
-        this.mapIframe.classList.add("map-iframe-focus")
-        this.mapIframe.classList.remove("iframe-map-hidden")
-        this.mapIframe.classList.remove("map-iframe-translucent")
+        this.updateMapIframeSrc(true);
+
+
+        this.mapIframe.classList.add("map-iframe-focus");
+        this.mapIframe.classList.remove("iframe-map-hidden");
+        this.mapIframe.classList.remove("map-iframe-translucent");
+
     }
     openMap() {
         this.updateMapIframeSrc(true)
         let layer = document.game.PLAYER.location.layer.includes("world") ?
-            document.game.PLAYER.location.layer.replace("world", '') : document.game.PLAYER.location.layer
+            document.game.PLAYER.location.layer.replace("world", '') : document.game.PLAYER.location.layer;
 
-        this.popupMap = window.open(`https://genfamap.com/${layer}?location=true#${document.game.PLAYER.character.pos2.x}_${document.game.PLAYER.character.pos2.y}_0.67`, "genfanad-map", 'width=800,height=600')
+
+        this.popupMap = window.open(`https://genfamap.com/${layer}?location=true#${document.game.PLAYER.character.pos2.x}_${document.game.PLAYER.character.pos2.y}_0.67`, "genfanad-map", 'width=800,height=600');
     }
     private setLocationLabelUnknown(): void {
         this.showCoordinates ?
             this.locationLabel.innerText = `(${document.game.GAME.world.x},${document.game.GAME.world.y})` :
-            this.locationLabel.innerText = ``
+            this.locationLabel.innerText = ``;
     }
     private setLocationLabel(value: string): void {
         this.showCoordinates ?
             this.locationLabel.innerText = `${value} (${document.game.GAME.world.x},${document.game.GAME.world.y})` :
-            this.locationLabel.innerText = `${value}`
+            this.locationLabel.innerText = `${value}`;
     }
     private checkSubLocation(subLocations: object, currentPosition: number[]): boolean {
         for (const subLocation in subLocations) {
             if (this.classifyPoint(subLocations[subLocation], currentPosition) != 1) {
-                this.setLocationLabel(subLocation)
-                this.currentLocation = subLocations[subLocation]
-                this.currentLocationLabel = subLocation
-                this.currentSubLocation = subLocations[subLocation]
+                this.setLocationLabel(subLocation);
+                this.currentLocation = subLocations[subLocation];
+                this.currentLocationLabel = subLocation;
+                this.currentSubLocation = subLocations[subLocation];
                 //TODO fix the nonsense going on here ^^ Decide the best way to store the current label and location as well as sub location
-                return true
+                return true;
             }
         }
     }/////////
@@ -309,12 +309,13 @@ export class GenLiteLocationsPlugin extends GenLitePlugin {
         //hmmmm ^^^^ This is duplicate of above; but also not sure if regions should be complex polygons perhaps only squares/cubes
         for (const regionLocation in regionLocations) {
             if (this.classifyPoint(regionLocations[regionLocation], currentPosition) != 1) {
-                this.setLocationLabel(regionLocation)
-                this.currentLocation = regionLocations[regionLocation]
-                this.currentLocationLabel = regionLocation
-                this.currentSubLocation = regionLocations[regionLocation]
+                this.setLocationLabel(regionLocation);
+                this.currentLocation = regionLocations[regionLocation];
+                this.currentLocationLabel = regionLocation;
+                this.currentSubLocation = regionLocations[regionLocation];
+
                 //TODO fix the nonsense going on here ^^ Decide the best way to store the current label and location as well as sub location
-                return true
+                return true;
             }
         }
 
@@ -322,74 +323,82 @@ export class GenLiteLocationsPlugin extends GenLitePlugin {
     private checkLocations(locationsToCheck: object, currentPosition: number[]): boolean {
         for (const location in locationsToCheck) {
             if (this.classifyPointOrPolygon(locationsToCheck[location], currentPosition) != 1) {
-                this.currentLocation = locationsToCheck[location].polygon
-                this.currentLocationLabel = location
+                this.currentLocation = locationsToCheck[location].polygon;
+                this.currentLocationLabel = location;
+
 
                 if (locationsToCheck[location].subLocations !== undefined) {
                     if (this.checkSubLocation(locationsToCheck[location].subLocations, currentPosition))
-                        return true
+                        return true;
                 }
 
-                this.setLocationLabel(location)
-                return true
+                this.setLocationLabel(location);
+                return true;
             }
         }
-        return this.checkRegionLocations(this.regionLocations, currentPosition)
+        return this.checkRegionLocations(this.regionLocations, currentPosition);
     }
     private classifyPointOrPolygon(pointOrPolygon: any, position: number[]): number { //-1, 0, 1
-        return this.classifyPoint((pointOrPolygon.polygon !== undefined) ? pointOrPolygon.polygon : pointOrPolygon, position)
+        return this.classifyPoint((pointOrPolygon.polygon !== undefined) ? pointOrPolygon.polygon : pointOrPolygon, position);
     }
     private startLocationCheck(currentPosition: number[], lastPosition: number[]): void {
         if (currentPosition != lastPosition) {
 
             //TODO re-add check previous location here and skip the switch if still in region.
-            let found: boolean
+            let found: boolean;
             switch (document.game.PLAYER.location.layer) {
                 case "dungeon":
-                    found = this.checkLocations(this.dungeonLocations, currentPosition)
+                    found = this.checkLocations(this.dungeonLocations, currentPosition);
                     break;
                 case "fae":
-                    this.setLocationLabel("Fae")//
+                    this.setLocationLabel("Fae");//
                     break;
                 case "world1":
                 case "world2":
                 case "world3":
                 default:
-                    found = this.checkLocations(this.mainLocations, currentPosition)
+                    found = this.checkLocations(this.mainLocations, currentPosition);
                     break;
 
             }
             if (!found) {
-                this.setLocationLabelUnknown()
+                this.setLocationLabelUnknown();
             }
         }
-        this.lastPosition = currentPosition
+        this.lastPosition = currentPosition;
+
     }
 
     private locationCheck() {
-        let currentPosition: number[] = [document.game.PLAYER.character.pos2.x, document.game.PLAYER.character.pos2.y]
-        this.startLocationCheck(currentPosition, this.lastPosition)
+        let currentPosition: number[] = [document.game.PLAYER.character.pos2.x, document.game.PLAYER.character.pos2.y];
+        this.startLocationCheck(currentPosition, this.lastPosition);
 
-        this.updateMapIframeSrc()
+
+        this.updateMapIframeSrc();
+
     }
     animationDetector(animation) {
-        this.locationCheck()
+        this.locationCheck();
     }
     private addGlobalStylesheet(css) {
-        let head, style
+        let head, style;
 
-        head = document.head || document.getElementsByTagName('head')[0]
 
-        style = document.createElement('style')
-        style.type = 'text/css'
+        head = document.head || document.getElementsByTagName('head')[0];
+
+
+        style = document.createElement('style');
+        style.type = 'text/css';
+
         //style.innerHTML = css.replace(/;/g, ' ! important;')
 
-        head.appendChild(style)
+        head.appendChild(style);
+
 
         if (style.styleSheet) {
-            style.styleSheet.cssText = css // This is required for IE8 and below.
+            style.styleSheet.cssText = css; // This is required for IE8 and below.
         } else {
-            style.appendChild(document.createTextNode(css))
+            style.appendChild(document.createTextNode(css));
         }
     }
     private addStylesheet() {
@@ -440,78 +449,90 @@ export class GenLiteLocationsPlugin extends GenLitePlugin {
                 border-radius: 50%;
                 border: 2px solid #DAA520;
             }
-        `)
+        `);
+
 
         //let sheet = document.styleSheets[0]
         //this.styleRuleIndex = sheet.insertRule("", sheet.cssRules.length)
-        this.stylesheetAdded = true
+        this.stylesheetAdded = true;
+
     }
     loginOK() {
         if (this.locationLabels) {
-            this.enableLocationLabels()
-            this.locationCheck()
+            this.enableLocationLabels();
+            this.locationCheck();
+
         }
         if (!this.stylesheetAdded) {
-            this.addStylesheet() //Would do in init but not working properly when used there...
+            this.addStylesheet(); //Would do in init but not working properly when used there...
         }
         if (this.compassMap)
-            this.enableMapIframe()
+            this.enableMapIframe();
+
     }
     Network_logoutOK() {
-        this.disableLocationLabels()
-        this.disableMapIframe()
+        this.disableLocationLabels();
+        this.disableMapIframe();
+
     }
 
     private minimapCompassClick = () => {
         if (this.mapFocus) {
-            this.hideMap()
+            this.hideMap();
         } else if (!this.mapFocus) {
-            this.focusMap()
+            this.focusMap();
         }
     }
 
     private minimapCompassRightClick = (event) => {
-        event.preventDefault()
-        this.toggleTranslucentMap()
+        event.preventDefault();
+        this.toggleTranslucentMap();
+
     }
     private enableMapIframe() {
         this.mapIframe.style.display = "block";
         this.mapIframe.style.visibility = "visible"; //Not a fan of doing it like this; need to determine better way to reolve issue
-        this.hideMap()
+        this.hideMap();
 
-        let minimapCompass = document.getElementById("new_ux-minimap-compass")
-        minimapCompass.addEventListener("click", this.minimapCompassClick)
-        minimapCompass.addEventListener("mouseover", this.minimapCompassMouseOver)
-        minimapCompass.addEventListener("mouseout", this.minimapCompassMouseOut)
-        minimapCompass.addEventListener('contextmenu', this.minimapCompassRightClick)
+
+        let minimapCompass = document.getElementById("new_ux-minimap-compass");
+        minimapCompass.addEventListener("click", this.minimapCompassClick);
+        minimapCompass.addEventListener("mouseover", this.minimapCompassMouseOver);
+        minimapCompass.addEventListener("mouseout", this.minimapCompassMouseOut);
+        minimapCompass.addEventListener('contextmenu', this.minimapCompassRightClick);
+
     }
     private disableMapIframe() {
-        this.hideMap()
+        this.hideMap();
 
-        let minimapCompass = document.getElementById("new_ux-minimap-compass")
-        minimapCompass.removeEventListener("click", this.minimapCompassClick)
-        minimapCompass.removeEventListener("mouseover", this.minimapCompassMouseOver)
-        minimapCompass.removeEventListener("mouseout", this.minimapCompassMouseOut)
-        minimapCompass.removeEventListener("contextmenu", this.minimapCompassRightClick)
+
+        let minimapCompass = document.getElementById("new_ux-minimap-compass");
+        minimapCompass.removeEventListener("click", this.minimapCompassClick);
+        minimapCompass.removeEventListener("mouseover", this.minimapCompassMouseOver);
+        minimapCompass.removeEventListener("mouseout", this.minimapCompassMouseOut);
+        minimapCompass.removeEventListener("contextmenu", this.minimapCompassRightClick);
+
     }
     private minimapCompassMouseOver = () => {
-        let minimapCompass = document.getElementById("new_ux-minimap-compass")
-        minimapCompass.classList.add("map-compass-outline")
+        let minimapCompass = document.getElementById("new_ux-minimap-compass");
+        minimapCompass.classList.add("map-compass-outline");
+
     }
     private minimapCompassMouseOut = () => {
-        let minimapCompass = document.getElementById("new_ux-minimap-compass")
-        minimapCompass.classList.remove("map-compass-outline")
+        let minimapCompass = document.getElementById("new_ux-minimap-compass");
+        minimapCompass.classList.remove("map-compass-outline");
+
     }
     private disableLocationLabels() {
-        this.locationLabel.style.display = "none"
-        this.locationLabel.style.visibility = "hidden"
+        this.locationLabel.style.display = "none";
+        this.locationLabel.style.visibility = "hidden";
         Object.defineProperty(document.game.PLAYER.character, "movement_animation", {
             set: (animation) => { }
         })
     }
     private enableLocationLabels() {
-        this.locationLabel.style.display = "block"
-        this.locationLabel.style.visibility = "visible"
+        this.locationLabel.style.display = "block";
+        this.locationLabel.style.visibility = "visible";
         Object.defineProperty(document.game.PLAYER.character, "movement_animation", {
             set: (animation) => {
                 this.animationDetector(animation)
