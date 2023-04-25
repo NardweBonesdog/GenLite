@@ -107,6 +107,7 @@ export class GenLiteUIPlugin extends GenLitePlugin {
         this.tabContentHolder.style.backgroundColor = 'rgba(42, 40, 40, 1)';
         this.tabContentHolder.style.borderTop = '1px solid rgba(0, 0, 0, 1)';
         this.tabContentHolder.style.borderRight = '1px solid rgba(66, 66, 66, 1)';
+        this.tabContentHolder.style.overflow = 'auto';
         this.sidePanel.appendChild(this.tabContentHolder);
 
         // Alert Holder
@@ -179,6 +180,8 @@ export class GenLiteUIPlugin extends GenLitePlugin {
                 document.body.style.transition = 'width 0.5s ease-in-out';
                 document.body.style.width = 'calc(100% - 302px)';
             }
+            // in any case, make sure we set the css var properly
+            document.body.style.setProperty('--available-space', document.body.clientWidth + 'px');
             document.game.GRAPHICS.resize();
         });
 
@@ -406,10 +409,11 @@ export class GenLiteUIPlugin extends GenLitePlugin {
             document.body.style.removeProperty('transition');
             document.body.style.removeProperty('width');
             document.game.GRAPHICS.resize = this.originalGraphicsResize;
-
         }
 
         this.uiTransition = state;
+        // in any case, make sure we set the css var properly
+        document.body.style.setProperty('--available-space', document.body.clientWidth + 'px');
         document.game.GRAPHICS.resize();
     }
 
@@ -967,6 +971,9 @@ export class GenLiteUIPlugin extends GenLitePlugin {
 
                         this.setKey(plugin + "." + setting, value);
                     });
+                    settingInput.onfocus = () => { document.game.CHAT.focus_locked = true; }
+                    settingInput.onblur = () => { document.game.CHAT.focus_locked = false; }
+
 
                     sliderRow.appendChild(settingInput);
 
@@ -1021,6 +1028,8 @@ export class GenLiteUIPlugin extends GenLitePlugin {
                         settings[setting].stateHandler(value);
                         this.setKey(plugin + "." + setting, value);
                     });
+                    valueLabel.onfocus = () => {document.game.CHAT.focus_locked = true;}
+                    valueLabel.onblur = () => {document.game.CHAT.focus_locked = false;}
                     sliderRow.appendChild(valueLabel);
 
 

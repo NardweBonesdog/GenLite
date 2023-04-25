@@ -2,8 +2,11 @@
     Copyright (C) 2022-2023 KKonaOG
 /*
     This file is part of GenLite.
+   
     GenLite is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
     GenLite is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ 
     You should have received a copy of the GNU General Public License along with Foobar. If not, see <https://www.gnu.org/licenses/>.
 */
 
@@ -20,6 +23,7 @@ export class GenLiteEnhancedContextMenu extends GenLitePlugin {
     lookupNPCs: boolean = false;
     lookupObjects: boolean = false;
     lookupItems: boolean = false;
+    photosEnabled: boolean = true;
     betterRockNames: boolean = false;
     rightClickAttack: boolean = false;
 
@@ -60,7 +64,12 @@ export class GenLiteEnhancedContextMenu extends GenLitePlugin {
             oldKey: 'NPCMenuSwapper.rightClickAttack',
             value: this.rightClickAttack,
             stateHandler: this.handleRightClickAttackToggle.bind(this)
-        }
+        },
+        "Right Click Photo": {
+            type: 'checkbox',
+            value: this.photosEnabled,
+            stateHandler: this.handlePhotosEnabledToggle.bind(this)
+        },
     }
 
     async init() {
@@ -94,6 +103,10 @@ export class GenLiteEnhancedContextMenu extends GenLitePlugin {
         this.lookupItems = state;
     }
 
+    handlePhotosEnabledToggle(state: boolean): void {
+        this.photosEnabled = state;
+    }
+
     handleBetterRockNamesToggle(state: boolean): void {
         this.betterRockNames = state;
     }
@@ -108,12 +121,23 @@ export class GenLiteEnhancedContextMenu extends GenLitePlugin {
 
         // Create a Map to store the actions
         let NPCs = new Map();
+        let Players = new Map();
 
+        let iii = 0;
         for (let i = 0; i < list.length; i++) {
             // Get the action object
             let actionObject = list[i].object;
 
-            if (actionObject.type === "player") continue;
+            if (actionObject.type === "player") {
+                if (Players.has(actionObject)) {
+                    // Push the action to the existing array
+                    Players.get(actionObject).push(list[i]);
+                } else {
+                    // Create a new array and push the action
+                    Players.set(actionObject, [list[i]]);
+                }
+                continue;
+            }
 
             // See if the object is already in the set
             if (NPCs.has(actionObject)) {
@@ -139,7 +163,7 @@ export class GenLiteEnhancedContextMenu extends GenLitePlugin {
                         // Take the name of the NPC remove any spaces
                         window.open(this.wikiBaseURL + cleanName, '_blank');
                     }
-                })
+                });
             }
 
             if (key.info.attackable) {
@@ -148,9 +172,26 @@ export class GenLiteEnhancedContextMenu extends GenLitePlugin {
                 attackAction.priority = (!this.rightClickAttack && key.levelDifference <= 10 && !document.game.PLAYER.character.combat) ? 2 : -2;
             }
         });
+
+        Players.forEach((value, key) => {
+            if (this.photosEnabled && (!value.find((action) => action.text === "Take Photo of"))) {
+                list.push({
+                    object: key,
+                    distance: value[0].distance,
+                    priority: -4,
+                    text: "Take Photo of",
+                    action: () => {
+                        let chatplugin = document['GenLiteChatPlugin'];
+                        if (chatplugin) {
+                            chatplugin.uiFetchNewProfilePic(key.nickname, null);
+                        }
+                    }
+                });
+            }
+        });
     }
 
-    OptimizedScene_Intersects(ray, list) {
+    OptimizedScene_intersects(ray, list) {
         if (!this.isEnabled || list.length === 0) return;
 
         let sceneObjects = new Map();
@@ -256,13 +297,13 @@ export class GenLiteEnhancedContextMenu extends GenLitePlugin {
         });
     }
 
-    Inventory__getAllContextOptions(itemID, itemActions) {
+    Inventory__getAllContextOptions(slotID, itemActions) {
         if (!this.isEnabled || !this.lookupItems) {
-            console.log("Lookup Off")
             return;
         }
 
-
+        if (!document.game.INVENTORY.items[slotID])
+            return;
 
         const objectName = itemActions[0].object.text();
 

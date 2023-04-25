@@ -49,6 +49,8 @@ export class GenLiteCameraPlugin extends GenLitePlugin {
 
     isPluginEnabled = true;
 
+    WORLDMANAGER: WorldManager
+
     pluginSettings: Settings = {
         "Unlock Camera": {
             type: "checkbox",
@@ -131,6 +133,7 @@ export class GenLiteCameraPlugin extends GenLitePlugin {
         document.genlite.registerPlugin(this);
         this.originalCameraMode = document.game.WorldManager.updatePlayerTile;
         this.originalAdvanceToBB = document.game.Segment.prototype.advanceToBB;
+        this.WORLDMANAGER = document.game.WORLDMANAGER;
     }
 
     async postInit() {
@@ -273,4 +276,58 @@ export class GenLiteCameraPlugin extends GenLitePlugin {
             }
         }
     }
+
+    /* some gross hack for a bug i dont quite understand but it seems to work so :shrug: - dpepls */
+    Segment_load(segmentObjects: any, thisSegment: Segment): void {
+        thisSegment.bb.min.x = Math.floor(Math.round(thisSegment.bb.min.x * 100) / 100) - 0.001;
+        thisSegment.bb.min.y = Math.floor(Math.round(thisSegment.bb.min.y * 100) / 100) - 0.001;
+        thisSegment.bb.max.x = Math.ceil(Math.round(thisSegment.bb.max.x * 100) / 100) + 0.001;
+        thisSegment.bb.max.y = Math.ceil(Math.round(thisSegment.bb.max.y * 100) / 100) + 0.001;
+
+    }
+    getPlayerPicture(name: string, callback) {
+        for (const pid in document.game.GAME.players) {
+            let player = document.game.GAME.players[pid];
+            if (player.nickname.toLowerCase() === name.toLowerCase()) {
+                this.getPlayerPictureByPid(pid, callback);
+            }
+        }
+    }
+
+    getPlayerPictureByPid(pid: string, callback) {
+        let player = document.game.GAME.players[pid];
+        let threeObj = player.object.threeObject;
+
+        let canvas = <HTMLCanvasElement>document.createElement('canvas');
+        let scene = new document.game.THREE.Scene();
+        let renderer = new document.game.THREE.WebGLRenderer({
+            canvas: canvas
+        });
+        renderer.setClearColor(new document.game.THREE.Color('#4d4d4d'));
+
+        let camera = new document.game.THREE.PerspectiveCamera(45, 1.0, 0.1, 65);
+        camera.position.y = 0.5;
+        camera.position.z = 0.5;
+
+        let s_ = document.client.get('s_');
+        let mesh = player.object.spineMesh;
+        let stand = mesh.animationsByName['stand/stand_front'];
+        mesh.portraitMesh = new s_(mesh, stand)
+        mesh.portraitMesh.scale.copy(threeObj.scale);
+        mesh.portraitMesh.scale.multiplyScalar(0.002025 / 0.1);
+        mesh.portraitMesh.translateY(-0.7);
+        scene.add(mesh.portraitMesh);
+
+        try {
+            renderer.clear();
+            renderer.render(scene, camera);
+            let image = renderer.domElement.toDataURL("image/png");
+            setTimeout(() => { callback(image); }, 0);
+        } finally {
+            scene.remove(mesh.portraitMesh);
+            mesh.portraitMesh = null;
+            renderer.dispose();
+        }
+    }
+
 }

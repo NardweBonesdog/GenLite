@@ -19,12 +19,12 @@ type StoreCallback = (db: IDBObjectStore) => void;
 export class GenLiteDatabasePlugin extends GenLitePlugin {
     public static pluginName = 'GenLiteDatabasePlugin';
     public static dbName = 'GenLiteDatabase';
-    public static version = 2;
+    public static version = 4;
 
     public supported = false;
     public initialized = false;
 
-    stores: Array<{callback: DatabaseCallback}> = [];
+    stores: Array<{ callback: DatabaseCallback }> = [];
 
     async init() {
         document.genlite.registerPlugin(this);
@@ -51,7 +51,7 @@ export class GenLiteDatabasePlugin extends GenLitePlugin {
 
     public storeTx(
         store: string,
-        rw: 'readwrite'|'readonly',
+        rw: 'readwrite' | 'readonly',
         callback: StoreCallback
     ) {
         if (!this.supported) {
@@ -82,7 +82,7 @@ export class GenLiteDatabasePlugin extends GenLitePlugin {
             GenLiteDatabasePlugin.version
         );
         r.onerror = (e) => {
-            console.log('GenLiteDatabaseError: ' + e);
+            this.error(e);
         };
 
         return r;
@@ -100,12 +100,16 @@ export class GenLiteDatabasePlugin extends GenLitePlugin {
             r.onupgradeneeded = (e: any) => {
                 let db = e.target.result;
                 for (const store of this.stores) {
-                    store.callback(db);
+                    try {
+                        store.callback(db);
+                    } catch (err) {
+                        this.error('creating store: ', err);
+                    }
                 }
             };
         }
     }
-    
+
     handlePluginState(state: boolean): void {
         // TODO: Implement
     }
