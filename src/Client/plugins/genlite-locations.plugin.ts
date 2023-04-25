@@ -21,8 +21,8 @@
 import { GenLitePlugin } from '../core/interfaces/plugin.class';
 
 export class GenLiteLocationsPlugin extends GenLitePlugin {
-    static pluginName = 'GenLiteLocationsPlugin'
-    private classifyPoint = require("robust-point-in-polygon") //<<---- I would like to remove library soon given locations will be vanilla soon?
+    static pluginName = 'GenLiteLocationsPlugin';
+    private classifyPoint = require("robust-point-in-polygon"); //<<---- I would like to remove library soon given locations will be vanilla soon?
     private stylesheetAdded: boolean = false;
     private locationLabels: boolean = false;
     private showCoordinates: boolean = false;//
@@ -171,7 +171,7 @@ export class GenLiteLocationsPlugin extends GenLitePlugin {
         this.mapIframe.style.display = "none";
         this.mapIframe.style.visibility = "hidden";
         this.mapIframe.classList.add("map-iframe", "map-iframe-hidden");
-        
+
         this.mapIframe.src = `https://genfamap.com/?location=true#0_0_${this.mapZoom}`;
         document.body.appendChild(this.mapIframe);
     }
@@ -232,7 +232,7 @@ export class GenLiteLocationsPlugin extends GenLitePlugin {
         }
         this.locationCheck();
     }
-    private updateMapIframeSrc(override=false): void {
+    private updateMapIframeSrc(override = false): void {
         if (!this.mapFocus && !this.mapTranslucent && !override) return;
         let layer = document.game.PLAYER.location.layer.includes("world") ?
             document.game.PLAYER.location.layer.replace("world", '') : document.game.PLAYER.location.layer;
@@ -241,7 +241,7 @@ export class GenLiteLocationsPlugin extends GenLitePlugin {
     }
     private toggleTranslucentMap(): void {
         this.mapTranslucent = !this.mapTranslucent;
-        
+
         if (this.mapTranslucent) {
             this.mapIframe.classList.add("map-iframe-translucent");
             this.mapIframe.classList.remove("map-iframe-hidden");
@@ -257,7 +257,7 @@ export class GenLiteLocationsPlugin extends GenLitePlugin {
     private hideMap(): void {
         this.mapFocus = false;
         this.mapTranslucent = false;
-        
+
         this.mapIframe.classList.add("map-iframe-hidden");
         this.mapIframe.classList.remove("map-iframe-focus");
         this.mapIframe.classList.remove("map-iframe-translucent");
@@ -276,7 +276,7 @@ export class GenLiteLocationsPlugin extends GenLitePlugin {
 
     }
     openMap() {
-        this.updateMapIframeSrc(true)
+        this.updateMapIframeSrc(true);
         let layer = document.game.PLAYER.location.layer.includes("world") ?
             document.game.PLAYER.location.layer.replace("world", '') : document.game.PLAYER.location.layer;
 
@@ -482,13 +482,13 @@ export class GenLiteLocationsPlugin extends GenLitePlugin {
         } else if (!this.mapFocus) {
             this.focusMap();
         }
-    }
+    };
 
     private minimapCompassRightClick = (event) => {
         event.preventDefault();
         this.toggleTranslucentMap();
 
-    }
+    };
     private enableMapIframe() {
         this.mapIframe.style.display = "block";
         this.mapIframe.style.visibility = "visible"; //Not a fan of doing it like this; need to determine better way to reolve issue
@@ -517,27 +517,27 @@ export class GenLiteLocationsPlugin extends GenLitePlugin {
         let minimapCompass = document.getElementById("new_ux-minimap-compass");
         minimapCompass.classList.add("map-compass-outline");
 
-    }
+    };
     private minimapCompassMouseOut = () => {
         let minimapCompass = document.getElementById("new_ux-minimap-compass");
         minimapCompass.classList.remove("map-compass-outline");
 
-    }
+    };
     private disableLocationLabels() {
         this.locationLabel.style.display = "none";
         this.locationLabel.style.visibility = "hidden";
         Object.defineProperty(document.game.PLAYER.character, "movement_animation", {
             set: (animation) => { }
-        })
+        });
     }
     private enableLocationLabels() {
         this.locationLabel.style.display = "block";
         this.locationLabel.style.visibility = "visible";
         Object.defineProperty(document.game.PLAYER.character, "movement_animation", {
             set: (animation) => {
-                this.animationDetector(animation)
+                this.animationDetector(animation);
             }
-        })
+        });
     }
 
     /* hook_PlayerMove(layer, x, y, force) {
